@@ -1,7 +1,8 @@
 import streamlit as st
 import requests
+import os
 
-API_URL='http://backend:8000/predict'
+API_URL = os.getenv("FASTAPI_URL")
 st.title('Cardio Vascular Disease Prediction')
 
 age= st.number_input('Enter Age',min_value=1,max_value=100)
@@ -33,7 +34,7 @@ if st.button('Predict'):
     }
 
     try:
-        response=requests.post(API_URL,json=input_data)
+        response=requests.post(f"{API_URL}/predict",json=input_data)
         
         # Check if response is successful first
         if response.status_code == 200:
