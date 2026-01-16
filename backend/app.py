@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from pydantic import BaseModel, Field, computed_field
 from fastapi.responses import JSONResponse
+from fastapi.middleware.cors import CORSMiddleware
 from typing import Literal, Annotated
 import joblib
 import pandas as pd
@@ -11,6 +12,14 @@ app= FastAPI()
 # Use relative path that works both locally and in Docker
 model_path = os.path.join(os.path.dirname(__file__), 'xgb_grid.pkl')
 model = joblib.load(model_path)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # restrict later
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 class Patient_input(BaseModel):
     age: Annotated[int, Field(...,gt=0, lt=100,description="Age of the patient in years")]
